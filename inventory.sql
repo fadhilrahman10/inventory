@@ -1,14 +1,13 @@
 -- phpMyAdmin SQL Dump
--- version 4.9.0.1
+-- version 5.1.1
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Waktu pembuatan: 25 Sep 2021 pada 19.11
--- Versi server: 10.4.6-MariaDB
--- Versi PHP: 7.1.31
+-- Waktu pembuatan: 01 Okt 2021 pada 19.54
+-- Versi server: 10.4.20-MariaDB
+-- Versi PHP: 7.4.22
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
-SET AUTOCOMMIT = 0;
 START TRANSACTION;
 SET time_zone = "+00:00";
 
@@ -41,8 +40,7 @@ CREATE TABLE `admin` (
 --
 
 INSERT INTO `admin` (`id_admin`, `email`, `nama_admin`, `alamat_admin`, `password`) VALUES
-('A01', 'raihanrmdn7@gmail.com', 'Raihan Murtadha Ramadhan', 'Jl Kubang Raya Km 4', '$2y$10$Bo7y/ZuhCDtFtIzko0jVKuKpPBgJlbdQwa4SScEZ07J1a8Ca3lXDe'),
-('A02', 'tomi@yahoo.com', 'tomi', '-', '$2y$10$BukjIwlzkmfYfYhP/LLUcuGPAyUoFeBucB/v6fVAYnkqhDBsrY8Lm');
+('A01', 'raihanrmdn7@gmail.com', 'Raihan Murtadha Ramadhan', 'Jl Kubang Raya Km 4', '$2y$10$Bo7y/ZuhCDtFtIzko0jVKuKpPBgJlbdQwa4SScEZ07J1a8Ca3lXDe');
 
 -- --------------------------------------------------------
 
@@ -59,13 +57,6 @@ CREATE TABLE `barang` (
   `harga_beli` double NOT NULL,
   `harga_jual` double NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `barang`
---
-
-INSERT INTO `barang` (`id_barang`, `merek`, `kategori`, `satuan`, `stok`, `harga_beli`, `harga_jual`) VALUES
-('B000001', 'Rinso Cair 50ml', 'Deterjen', 'Btl', 0, 2400, 3000);
 
 -- --------------------------------------------------------
 
@@ -85,13 +76,6 @@ CREATE TABLE `stok` (
   `keterangan` text NOT NULL,
   `id_user` varchar(10) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data untuk tabel `stok`
---
-
-INSERT INTO `stok` (`id_stok`, `id_barang`, `type`, `tanggal`, `nama_supplier`, `kategori`, `qty`, `satuan`, `keterangan`, `id_user`) VALUES
-('St000001', 'B000001', 'in', '2021-09-24 23:59:10', '-', 'Deterjen', 80, 'Btl', 'haus', '');
 
 -- --------------------------------------------------------
 
@@ -114,6 +98,20 @@ INSERT INTO `supplier` (`id_supplier`, `nama_supplier`, `no_hp`, `alamat_supplie
 ('S01', '-', '0', '-'),
 ('S02', 'ALI (PT. Indomarco Prismatama)', '082234567456', 'Jl Kubang Raya'),
 ('S03', 'Yusuf (PT. Alam Jaya Sejahtera', '081938573452', 'Jl Kutilang Sakti');
+
+-- --------------------------------------------------------
+
+--
+-- Struktur dari tabel `transaksi`
+--
+
+CREATE TABLE `transaksi` (
+  `id_transaksi` varchar(10) NOT NULL,
+  `id_barang` varchar(10) NOT NULL,
+  `invoice` varchar(50) NOT NULL,
+  `qty` int(11) NOT NULL,
+  `status` varchar(100) DEFAULT 'PENDING'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 --
 -- Indexes for dumped tables
@@ -143,6 +141,12 @@ ALTER TABLE `stok`
 --
 ALTER TABLE `supplier`
   ADD PRIMARY KEY (`id_supplier`);
+
+--
+-- Indeks untuk tabel `transaksi`
+--
+ALTER TABLE `transaksi`
+  ADD PRIMARY KEY (`id_transaksi`);
 
 --
 -- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
