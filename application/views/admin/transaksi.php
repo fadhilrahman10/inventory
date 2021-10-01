@@ -137,7 +137,7 @@
                                 <textarea name="catatan" id="catatan" cols="40" rows="3" placeholder="Opsional..."></textarea>
                             </div>
                         </div>
-                        <button type="button" class="btn btn-primary col-sm-12">Proses Bayar</button>
+                        <button type="button" class="btn btn-primary col-sm-12" id="paid" data-toggle="modal" data-target="#payment">Proses Bayar</button>
                     </div>
                 </div>
             </div>
@@ -201,6 +201,23 @@
                         </tbody>
                     </table>
                 </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="payment">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal-payment">Payment Status</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <!-- DataTables Example -->
+            <div class="card-body">
+                <h4 class="text-center text-success" id="status"></h4>
             </div>
         </div>
     </div>
@@ -271,13 +288,13 @@
                 "<td>" + isi[i].merek + "</td>" +
                 "<td>" + isi[i].harga_jual + "</td>" +
                 "<td width='200'> <button type='button' onclick='minQty(" + '"' + isi[i].id_transaksi + '"' + ")' class='btn badge badge-dark d-inline'>-</button> " + '<input type="number" class="form-control form-control-sm col-4 d-inline" value="' + isi[i].qty + '" readonly name="sub_total" id="' + isi[i].id_transaksi + '" />' + "<button type='button' onclick='getQty(" + '"' + isi[i].id_transaksi + '"' + ")' class='btn badge badge-primary ml-1'>+</button></td>" +
-                "<td id='total" + isi[i].id_transaksi + "'>" + total + "</td>" +
+                "<td id='total" + isi[i].id_transaksi + "'>" + isi[i].harga + "</td>" +
                 "<td>" + '<button  class="btn badge badge-danger" onclick="hapusCart(' + "'" + isi[i].id_transaksi + "'" + ')">X</button>' + "</td>" +
                 "</tr>";
-            total += total;
+            sub_total += isi[i].harga;
         }
         $('#barang').html(tabel);
-        $('#subTotal').val(total);
+        $('#subTotal').val(sub_total);
     }
 
     function getQty(id) {
@@ -295,13 +312,6 @@
                 getAllCart();
             }
         })
-
-        // var qty = $('#' + id).val();
-
-        // var result = harga * qty;
-
-        // $('#total' + id).html(result);
-        // var oldSub = $('#subTotal').val();
     }
 
     function minQty(id) {
@@ -320,19 +330,60 @@
 
             }
         })
-
-        // var qty = $('#' + id).val();
-
-        // var result = harga * qty;
-
-        // $('#total' + id).html(result);
-        // var oldSub = $('#subTotal').val();
     }
 
     $(document).ready(function() {
         var total = $('.subtotal').html();
         console.log(total);
     });
+
+    $('#bayar').keyup(function() {
+        var subTotal = $('#subTotal').val();
+        var bayar = $('#bayar').val();
+
+        var result = parseInt(bayar) - parseInt(subTotal);
+
+        if (isNaN(result)) {
+            $('#kembalian').val(0);
+        } else {
+            $('#kembalian').val(result);
+        }
+
+    });
+
+    $('#paid').click(function() {
+        var kembalian = $('#kembalian').val();
+
+        if (kembalian < 0 || isNaN(kembalian) || kembalian == '') {
+            $('#status').removeClass('text-success');
+            $('#status').text('Payment Failed');
+            $('#status').addClass('text-danger');
+        } else {
+            paymentStatus();
+            $('#status').addClass('text-success');
+            $('#status').text('Payment Success');
+            $('#status').removeClass('text-danger');
+        }
+
+        reset();
+    });
+
+    function paymentStatus() {
+        $.ajax({
+            url: '<?= base_url('admin/payment'); ?>',
+            type: 'post',
+            dataType: 'json',
+            success: function(data) {
+                getAllCart();
+            }
+        })
+    }
+
+    function reset() {
+        $('#subTotal').val('');
+        $('#kembalian').val('');
+        $('#bayar').val('');
+    }
 
     function hapusCart(id) {
         $.ajax({

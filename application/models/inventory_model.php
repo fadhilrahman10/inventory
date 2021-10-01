@@ -374,7 +374,14 @@ class Inventory_model extends CI_Model
         $this->db->select('*');
         $this->db->from('transaksi');
         $this->db->join('barang', 'barang.id_barang = transaksi.id_barang');
+        $this->db->where('transaksi.status', 'PENDING');
         return $this->db->get()->result_array();
+    }
+
+    public function update_trasaksi()
+    {
+        $sql = "UPDATE transaksi SET status = 'SUCCESS' WHERE status = 'PENDING'";
+        $this->db->query($sql);
     }
 
     public function hapus($tabel, $whereClause)

@@ -291,7 +291,8 @@ class Admin extends CI_Controller
         $val = [
             'id_transaksi' => $id_transaksi,
             'id_barang' => $id_barang,
-            'invoice' => $invoice
+            'invoice' => $invoice,
+            'qty' => 1
         ];
 
         $this->inventory_model->add('transaksi', $val);
@@ -303,10 +304,12 @@ class Admin extends CI_Controller
     {
         $data = $this->inventory_model->getCart();
         $harga = 0;
-        foreach ($data as $key) {
-            $harga = (int)$key['harga_jual'] * (int)$key['qty'];
-            $key['harga'] = [$harga];
+
+        for ($i = 0; $i < count($data); $i++) {
+            $harga = (int)$data[$i]['harga_jual'] * (int)$data[$i]['qty'];
+            $data[$i]['harga'] = $harga;
         }
+
         print json_encode($data);
     }
 
@@ -328,6 +331,20 @@ class Admin extends CI_Controller
     {
         $id = $this->input->post('id_transaksi');
         $this->inventory_model->update_qty($id, 1, 'minus');
+        print json_encode('success');
+    }
+
+    public function payment()
+    {
+
+        $data_barang = $this->inventory_model->getCart();
+
+        foreach ($data_barang as $data) {
+            $this->inventory_model->update_barangKeluar($data['id_barang'], $data['qty']);
+        }
+
+        $this->inventory_model->update_trasaksi();
+
         print json_encode('success');
     }
 }
