@@ -71,7 +71,7 @@
                     <div class="card-body">
                         <div align="right">
                             <h5>Invoice <b><Span id="invoice" name="invoice"><?= $invoice; ?></Span></b></h5>
-                            <h1><b><span id="grandTotal" style="font-size:50pt">400.000</span></b></h1>
+                            <h1><b><span id="grandTotal" style="font-size:50pt"></span></b></h1>
                         </div>
                     </div>
                 </div>
@@ -295,6 +295,7 @@
         }
         $('#barang').html(tabel);
         $('#subTotal').val(sub_total);
+        $('#grandTotal').val(sub_total);
     }
 
     function getQty(id) {
@@ -332,10 +333,10 @@
         })
     }
 
-    $(document).ready(function() {
-        var total = $('.subtotal').html();
-        console.log(total);
-    });
+    // $(document).ready(function() {
+    //     var total = $('.subtotal').html();
+    //     console.log(total);
+    // });
 
     $('#bayar').keyup(function() {
         var subTotal = $('#subTotal').val();
@@ -383,6 +384,8 @@
         $('#subTotal').val('');
         $('#kembalian').val('');
         $('#bayar').val('');
+        $('#grandTotal').val('');
+
     }
 
     function hapusCart(id) {
