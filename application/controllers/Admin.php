@@ -284,7 +284,7 @@ class Admin extends CI_Controller
     public function tambahCart()
     {
         $id_barang = $this->input->post('id_barang');
-        // $isi = $this->inventory_model->getData('barang', ['id_barang' => $id]);
+        $isi = $this->inventory_model->getData('barang', ['id_barang' => $id_barang]);
         $id_transaksi = $this->inventory_model->id_transaksi();
         $invoice = $this->inventory_model->invoice();
 
@@ -292,7 +292,8 @@ class Admin extends CI_Controller
             'id_transaksi' => $id_transaksi,
             'id_barang' => $id_barang,
             'invoice' => $invoice,
-            'qty' => 1
+            'qty' => 1,
+            'sub_total' => $isi['harga_jual']
         ];
 
         $this->inventory_model->add('transaksi', $val);
@@ -303,13 +304,6 @@ class Admin extends CI_Controller
     public function getAllCart()
     {
         $data = $this->inventory_model->getCart();
-        $harga = 0;
-
-        for ($i = 0; $i < count($data); $i++) {
-            $harga = (int)$data[$i]['harga_jual'] * (int)$data[$i]['qty'];
-            $data[$i]['harga'] = $harga;
-        }
-
         print json_encode($data);
     }
 

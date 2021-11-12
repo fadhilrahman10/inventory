@@ -250,7 +250,9 @@
     function tambahCart(id) {
         $.ajax({
             url: '<?= base_url('admin/tambahCart'); ?>',
-            data: 'id_barang=' + id,
+            data: {
+                'id_barang': id,
+            },
             type: 'post',
             dataType: 'json',
             success: function(isi) {
@@ -281,17 +283,17 @@
         var tabel = '';
         var sub_total = 0;
         for (var i = 0; i < isi.length; i++) {
-            var total = isi[i].harga_jual * 1;
+            // var total = isi[i].sub_total * 1;
             tabel += "<tr>" +
                 "<td>" + isi[i].id_transaksi + "</td>" +
                 "<td>" + isi[i].id_barang + "</td>" +
                 "<td>" + isi[i].merek + "</td>" +
                 "<td>" + isi[i].harga_jual + "</td>" +
                 "<td width='200'> <button type='button' onclick='minQty(" + '"' + isi[i].id_transaksi + '"' + ")' class='btn badge badge-dark d-inline'>-</button> " + '<input type="number" class="form-control form-control-sm col-4 d-inline" value="' + isi[i].qty + '" readonly name="sub_total" id="' + isi[i].id_transaksi + '" />' + "<button type='button' onclick='getQty(" + '"' + isi[i].id_transaksi + '"' + ")' class='btn badge badge-primary ml-1'>+</button></td>" +
-                "<td id='total" + isi[i].id_transaksi + "'>" + isi[i].harga + "</td>" +
+                "<td id='total" + isi[i].id_transaksi + "'>" + isi[i].sub_total + "</td>" +
                 "<td>" + '<button  class="btn badge badge-danger" onclick="hapusCart(' + "'" + isi[i].id_transaksi + "'" + ')">X</button>' + "</td>" +
                 "</tr>";
-            sub_total += isi[i].harga;
+            sub_total += parseInt(isi[i].sub_total);
         }
         $('#barang').html(tabel);
         $('#subTotal').val(sub_total);
