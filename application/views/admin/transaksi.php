@@ -211,12 +211,12 @@
 <script>
     $(document).ready(function() {
         $(document).on('click', '#select', function() {
-            var id_barang = $(this).data('id');
-            var merek = $(this).data('nama');
-            var satuan = $(this).data('satuan');
-            var kategori = $(this).data('kategori');
-            var harga_jual = $(this).data('hargajual');
-            var stok = $(this).data('stok');
+            let id_barang = $(this).data('id');
+            let merek = $(this).data('nama');
+            let satuan = $(this).data('satuan');
+            let kategori = $(this).data('kategori');
+            let harga_jual = $(this).data('hargajual');
+            let stok = $(this).data('stok');
 
             $('#id_barang').val(id_barang);
             $('#nama').val(merek);
@@ -261,19 +261,27 @@
     }
 
     function tabel(isi) {
-        var tabel = '';
-        var sub_total = 0;
+        let tabel = '';
+        let sub_total = 0;
         for (var i = 0; i < isi.length; i++) {
-            var total = isi[i].harga_jual * 1;
-            tabel += "<tr>" +
-                "<td>" + isi[i].id_transaksi + "</td>" +
-                "<td>" + isi[i].id_barang + "</td>" +
-                "<td>" + isi[i].merek + "</td>" +
-                "<td>" + isi[i].harga_jual + "</td>" +
-                "<td width='200'> <button type='button' onclick='minQty(" + '"' + isi[i].id_transaksi + '"' + ")' class='btn badge badge-dark d-inline'>-</button> " + '<input type="number" class="form-control form-control-sm col-4 d-inline" value="' + isi[i].qty + '" readonly name="sub_total" id="' + isi[i].id_transaksi + '" />' + "<button type='button' onclick='getQty(" + '"' + isi[i].id_transaksi + '"' + ")' class='btn badge badge-primary ml-1'>+</button></td>" +
-                "<td id='total" + isi[i].id_transaksi + "'>" + total + "</td>" +
-                "<td>" + '<button  class="btn badge badge-danger" onclick="hapusCart(' + "'" + isi[i].id_transaksi + "'" + ')">X</button>' + "</td>" +
-                "</tr>";
+            let total = isi[i].harga_jual * 1;
+            tabel += `
+                <tr>
+                    <td>${isi[i].id_transaksi}</td>
+                    <td>${isi[i].id_barang}</td>
+                    <td>${isi[i].merek}</td>
+                    <td>${isi[i].harga_jual}</td>
+                    <td width="200">
+                        <button type="button" onclick="minQty('${isi[i].id_transaksi}')" class="btn badge badge-dark d-inline"> - </button>
+                        <input type="number" name="sub_total" id="${isi[i].id_transaksi}" value="${isi[i].qty}" readonly class="form-control form-control-sm col-4 d-inline" />
+                        <button type="button" onclick="getQty('${isi[i].id_transaksi}')" class="btn badge badge-primary d-inline"> - </button>
+                    </td>
+                    <td id="total${isi[i].id_transaksi}">${total}</td>
+                    <td>
+                        <button class="btn badge badge-danger" onclick="hapusCart('${isi[i].id_transaksi}')" >X</button>
+                    </td>
+                </tr>
+            `;
             total += total;
         }
         $('#barang').html(tabel);
@@ -295,19 +303,11 @@
                 getAllCart();
             }
         })
-
-        // var qty = $('#' + id).val();
-
-        // var result = harga * qty;
-
-        // $('#total' + id).html(result);
-        // var oldSub = $('#subTotal').val();
     }
 
     function minQty(id) {
 
         var qty = $('#' + id).val();
-        console.log(qty);
 
         $.ajax({
             url: '<?= base_url('admin/minQty') ?>',
@@ -320,18 +320,10 @@
 
             }
         })
-
-        // var qty = $('#' + id).val();
-
-        // var result = harga * qty;
-
-        // $('#total' + id).html(result);
-        // var oldSub = $('#subTotal').val();
     }
 
     $(document).ready(function() {
         var total = $('.subtotal').html();
-        console.log(total);
     });
 
     function hapusCart(id) {
